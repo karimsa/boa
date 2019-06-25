@@ -3,8 +3,20 @@
  * @copyright 2019-present Karim Alibhai. All rights reserved.
  */
 
-function assertString(name) {
+const env = new Map()
+
+function getValue(name) {
+	if (env.has(name)) {
+		return env.get(name)
+	}
+
 	const value = process.env[name]
+	env.set(name, value)
+	return value
+}
+
+function assertString(name) {
+	const value = getValue(name)
 	if (!value) {
 		throw new Error(`Missing env variable: ${name}`)
 	}
@@ -26,75 +38,76 @@ function getEnvName(name) {
 }
 
 // Env constants
-export const NodeEnv = process.env.NODE_ENV || 'development'
+export const NodeEnv = getValue('NODE_ENV') || 'development'
 export const isTestEnv = NodeEnv === 'test'
 export const isDevelopment = NodeEnv === 'development'
 export const isProduction = NodeEnv === 'production'
 export const EnvTarget = isProduction
 	? assertString('ENV_TARGET')
-	: process.env.ENV_TARGET || 'development'
+	: getValue('ENV_TARGET') || 'development'
 export const isLocalEnv =
-	process.env.NODE_ENV !== 'production' || EnvTarget === 'local'
+	getValue('NODE_ENV') !== 'production' || EnvTarget === 'local'
 
-export const Config = {
-	/**
-	 * Reads a environment variable from the env as a string.
-	 * @param {string} name name of the environment variable to read
-	 * @param {string?} defaultValue value to return if the environment variable does not exist
-	 */
-	string(name, defaultValue) {
-		name = getEnvName(name)
+/**
+ * Reads a environment variable from the env as a string.
+ * @param {string} name name of the environment variable to read
+ * @param {string?} defaultValue value to return if the environment variable does not exist
+ */
+export function string(name, defaultValue) {
+	name = getEnvName(name)
 
-		if (defaultValue === undefined) {
-			return assertString(name)
-		}
-		return process.env[name] || defaultValue
-	},
+	if (defaultValue === undefined) {
+		return assertString(name)
+	}
+	return getValue(name) || defaultValue
+}
 
-	/**
-	 * Reads a boolean environment variable.
-	 * @param {string} name name of the environment variable to read
-	 * @param {boolean} defaultValue value to return if the environment variable does not exist
-	 */
-	bool(name, defaultValue) {
-		name = getEnvName(name)
+/**
+ * Reads a boolean environment variable.
+ * @param {string} name name of the environment variable to read
+ * @param {boolean} defaultValue value to return if the environment variable does not exist
+ */
+export function bool(name, defaultValue) {
+	name = getEnvName(name)
 
-		const value =
-			defaultValue === undefined ? assertString(name) : process.env[name]
+	const value = defaultValue === undefined ? assertString(name) : getValue(name)
 
-		if (value === undefined) {
-			return defaultValue
-		}
+	if (value === undefined) {
+		return defaultValue
+	}
 
-		if (value === 'true') {
-			return true
-		} else if (value === 'false') {
-			return false
-		}
+	if (value === 'true') {
+		return true
+	} else if (value === 'false') {
+		return false
+	}
 
-		throw new Error(`Non-boolean value given for ${name} => ${value}`)
-	},
+	throw new Error(`Non-boolean value given for ${name} => ${value}`)
+}
 
-	/**
-	 * Reads a environment variable from the env as an integer.
-	 * @param {string} name name of the environment variable to read
-	 * @param {number?} defaultValue value to return if the environment variable does not exist
-	 */
-	int(name, defaultValue) {
-		name = getEnvName(name)
+export function exists(name) {
+	return getValue(name) !== undefined
+}
 
-		const str =
-			defaultValue === undefined
-				? assertString(name)
-				: process.env[name] || String(defaultValue)
-		const value = parseInt(str, 10)
+/**
+ * Reads a environment variable from the env as an integer.
+ * @param {string} name name of the environment variable to read
+ * @param {number?} defaultValue value to return if the environment variable does not exist
+ */
+export function int(name, defaultValue) {
+	name = getEnvName(name)
 
-		if (isNaN(value) || str !== String(value)) {
-			throw new Error(
-				`Env variable '${name}' must be a valid integer, not '${str}'`,
-			)
-		}
+	const str =
+		defaultValue === undefined
+			? assertString(name)
+			: getValue(name) || String(defaultValue)
+	const value = parseInt(str, 10)
 
-		return value
-	},
+	if (isNaN(value) || str !== String(value)) {
+		throw new Error(
+			`Env variable '${name}' must be a valid integer, not '${str}'`,
+		)
+	}
+
+	return value
 }

@@ -10,7 +10,7 @@ import * as util from 'util'
 import createDebug from 'debug'
 import { createLogger, format, transports } from 'winston'
 
-import { Config } from './config'
+import * as Config from './config'
 
 // Support for Node v8.x
 util.formatWithOptions =
@@ -117,7 +117,7 @@ export const logger = {
 			}
 
 			// Report the error
-			if (Config.Sentry.DSN) {
+			if (Config.exists('Sentry.DSN')) {
 				Sentry.captureException(err)
 			}
 
@@ -192,7 +192,7 @@ export const logger = {
 }
 
 // Setup sentry if a valid DSN is available in the environment
-if (Config.string('Sentry.DSN', '')) {
+if (Config.exists('Sentry.DSN')) {
 	logger.info(`Initializing with sentry enabled`)
 
 	Sentry.init({

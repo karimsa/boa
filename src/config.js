@@ -52,6 +52,30 @@ export const Config = {
 	},
 
 	/**
+	 * Reads a boolean environment variable.
+	 * @param {string} name name of the environment variable to read
+	 * @param {boolean} defaultValue value to return if the environment variable does not exist
+	 */
+	bool(name, defaultValue) {
+		name = getEnvName(name)
+
+		const value =
+			defaultValue === undefined ? assertString(name) : process.env[name]
+
+		if (value === undefined) {
+			return defaultValue
+		}
+
+		if (value === 'true') {
+			return true
+		} else if (value === 'false') {
+			return false
+		}
+
+		throw new Error(`Non-boolean value given for ${name} => ${value}`)
+	},
+
+	/**
 	 * Reads a environment variable from the env as an integer.
 	 * @param {string} name name of the environment variable to read
 	 * @param {number?} defaultValue value to return if the environment variable does not exist

@@ -1,6 +1,6 @@
 <h1 align="center">boa</h1>
 
-<p align="center">Tools for developing robust APIs.</p>
+<p align="center">Toolkit for building backends in Node.js.</p>
 
 ## Configuration
 

@@ -1,6 +1,10 @@
 {
 	"name": "@karimsa/boa",
 	"version": "0.0.0",
+	"description": "Toolkit for building backends in Node.js.",
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"test": "ava -v",
 		"lint": "eslint src/**/*.js",

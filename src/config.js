@@ -86,7 +86,7 @@ export const Config = {
 		const str =
 			defaultValue === undefined
 				? assertString(name)
-				: process.env[name] || defaultValue
+				: process.env[name] || String(defaultValue)
 		const value = parseInt(str, 10)
 
 		if (isNaN(value) || str !== String(value)) {

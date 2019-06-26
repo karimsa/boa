@@ -5,5 +5,10 @@
 
 import './perf'
 
-export * from './config'
+import * as http from './server'
+import * as Config from './config'
+import * as Redis from './redis'
+
+export { http, Config, Redis }
+
 export * from './logger'

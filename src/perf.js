@@ -4,8 +4,9 @@
  */
 
 import prettyTime from 'pretty-time'
+import * as os from 'os'
 
-import { Config } from './config'
+import * as Config from './config'
 import { logger } from './logger'
 
 // Start either the blocked or blocked-at module, depending on
@@ -26,4 +27,44 @@ if (Config.isProduction) {
 			),
 		{ threshold: Config.int('Perf.MaxEventLoopBlock', 100) },
 	)
+}
+
+/**
+ * Simple API for monitoring performance.
+ */
+
+const observers = []
+const transformers = []
+const emitEvent = object => {
+	const originalObject = object
+	object.timestamp = Date.now()
+	object.hostname = os.hostname()
+
+	for (const fn of transformers) {
+		object = fn(object)
+
+		// Allow transformers to filter out events
+		if (!object) {
+			logger.debug(
+				'boa:perf',
+				`Dropping performance event due to transformer => %O`,
+				originalObject,
+			)
+			return
+		}
+	}
+
+	logger.debug('boa:perf', 'Emitting performance event: %O', object)
+	return Promise.all(observers.map(fn => fn(object)))
+}
+
+export const Performance = {
+	mark: (event, data) => emitEvent({ type: 'single_event', event, data }),
+
+	markStart: (event, data) =>
+		emitEvent({ type: 'duration_start', event, data }),
+	markEnd: (event, data) => emitEvent({ type: 'duration_end', event, data }),
+
+	transform: fn => transformers.push(fn),
+	observe: fn => observers.push(fn),
 }

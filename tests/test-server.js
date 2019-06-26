@@ -12,13 +12,47 @@ test('should be able to create http servers', async t => {
 	const app = supertest(
 		http.createServer({
 			routes: [
-				http.route('GET', '/test', () => ({
+				http.route(
+					'GET',
+					'/test',
+					() => ({
+						blah: 'shizblah',
+					}),
+					{
+						noauth: true,
+					},
+				),
+				http.route('GET', '/protected', () => ({
 					blah: 'shizblah',
 				})),
+				http.route(
+					'GET',
+					'/internal-error',
+					() => Promise.reject(new Error('blahshizblah')),
+					{
+						noauth: true,
+					},
+				),
 			],
 		}),
 	)
 
 	t.is((await app.get('/')).status, 404)
-	t.is((await app.get('/test')).status, 401)
+
+	// unprotected
+	const testRes = await app.get('/test')
+	t.is(testRes.status, 200)
+	t.deepEqual(testRes.body, {
+		blah: 'shizblah',
+	})
+
+	// protected
+	const protectedBody = await app.get('/protected')
+	t.is(protectedBody.status, 401)
+	t.regex(protectedBody.body.error.message, /not authenticated/)
+
+	// internal error
+	const internalErr = await app.get('/internal-error')
+	t.is(internalErr.status, 500)
+	t.regex(internalErr.body.error.message, /blahshizblah/)
 })

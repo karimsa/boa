@@ -106,6 +106,7 @@ export function createServer({ routes }) {
 				const body = await handler(req, res)
 				res.end(stringify(body))
 			} catch (err) {
+				res.statusCode = 500
 				res.end(
 					stringify({
 						error: String(err),

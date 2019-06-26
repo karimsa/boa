@@ -11,8 +11,8 @@ test('should be able to read string variables from the env', t => {
 	const err = t.throws(() => Config.string('TestOne'))
 	t.regex(String(err), /Missing/)
 
-	process.env.TEST_ONE = 'blah'
-	t.is(Config.string('TestOne'), 'blah')
+	process.env.TEST_APE = 'blah'
+	t.is(Config.string('TestApe'), 'blah')
 })
 
 test('should be able to read integer variables from the env', t => {
@@ -21,12 +21,12 @@ test('should be able to read integer variables from the env', t => {
 	t.regex(String(err), /Missing/)
 
 	// value should be parsed correctly
-	process.env.TEST_TWO = '152'
-	t.is(Config.int('TestTwo'), 152)
+	process.env.TEST_APPLE = '152'
+	t.is(Config.int('TestApple'), 152)
 
 	// value should be cached
-	process.env.TEST_TWO = '1898948989389'
-	t.is(Config.int('TestTwo'), 152)
+	process.env.TEST_APPLE = '1898948989389'
+	t.is(Config.int('TestApple'), 152)
 
 	// floats are not allowed
 	process.env.TEST_THREE = '152.1434'

@@ -13,18 +13,27 @@ import * as Redis from './redis'
 import { logger } from './logger'
 import { Performance } from './perf'
 
-const sessionRedis = Redis.createClient(Config.int('Redis.AuthenticationDB', 0))
 const sessionKey = ({ token, sid }) =>
 	Config.bool('Server.UseCookieSessions', false)
 		? `user(${token}:${sid})`
 		: `user(${token})`
+
+let _getRedisClient
+function getRedisClient() {
+	return (
+		_getRedisClient ||
+		(_getRedisClient = Redis.createClient(
+			Config.int('Redis.AuthenticationDB', 0),
+		))
+	)
+}
 
 export async function createSession(user, res) {
 	const token = uuid()
 	const sid = uuid()
 
 	if (
-		(await sessionRedis.set(
+		(await getRedisClient().set(
 			sessionKey({ token, sid }),
 			JSON.stringify({ userID: user._id }),
 			'NX',
@@ -59,7 +68,7 @@ export async function getSession(req) {
 
 	logger.debug('hf:auth', 'Received auth request => %O', { sid, token })
 	if (sid && token) {
-		const sessionStr = await sessionRedis.get(sessionKey({ token, sid }))
+		const sessionStr = await getRedisClient().get(sessionKey({ token, sid }))
 		logger.debug('hf:auth', 'Retrieved session for user => %O', sessionStr)
 		if (sessionStr) {
 			try {

@@ -1,6 +1,6 @@
-<h1 align="center">boa</h1>
+# boa [![CircleCI](https://circleci.com/gh/karimsa/boa.svg?style=svg)](https://circleci.com/gh/karimsa/boa)
 
-<p align="center">Toolkit for building backends in Node.js.</p>
+Toolkit for building backends in Node.js.
 
 - [Configuration](#configuration)
 - [Logger](#logger)

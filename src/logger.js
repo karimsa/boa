@@ -193,15 +193,15 @@ export const logger = {
 
 // Setup sentry if a valid DSN is available in the environment
 if (Config.exists('Sentry.DSN')) {
-	logger.info(`Initializing with sentry enabled`)
+	logger.verbose(`Initializing with sentry enabled`)
 
 	Sentry.init({
 		dsn: Config.string('Sentry.DSN'),
 	})
 } else if (Config.isTestEnv) {
-	setImmediate(() => logger.info(`Initializing with sentry disabled`))
+	setImmediate(() => logger.verbose(`Initializing with sentry disabled`))
 } else {
-	logger.info(`Initializing with sentry disabled`)
+	logger.verbose(`Initializing with sentry disabled`)
 }
 
 // Just for convenience, it is useful to know what debug namespaces are enabled

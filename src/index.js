@@ -8,5 +8,5 @@ import * as Config from './config'
 import * as Redis from './redis'
 
 export { http, Config, Redis }
-export * from './perf'
-export * from './logger'
+export { Performance } from './perf'
+export { logger } from './logger'

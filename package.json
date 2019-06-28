@@ -1,6 +1,6 @@
 {
 	"name": "@karimsa/boa",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Toolkit for building backends in Node.js.",
 	"publishConfig": {
 		"access": "public"

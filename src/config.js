@@ -3,6 +3,9 @@
  * @copyright 2019-present Karim Alibhai. All rights reserved.
  */
 
+import createDebug from 'debug'
+
+const debug = createDebug('boa:config')
 const env = new Map()
 
 function getValue(name) {
@@ -34,6 +37,7 @@ function getEnvName(name) {
 			castedName += name[i].toUpperCase()
 		}
 	}
+	debug(`Looking up ${castedName} in env (source: ${name})`)
 	return castedName
 }
 

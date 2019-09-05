@@ -100,6 +100,8 @@ const formatOpts = {
 	depth: 10,
 }
 
+const lastDebugTime = new Map()
+
 /**
  * A winston-powered logger with `util.format()` powered message
  * formatting & convenience methods for errors and debugging.

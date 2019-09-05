@@ -3,14 +3,16 @@
  * @copyright 2018-present HireFast Inc. All rights reserved.
  */
 
+import * as os from 'os'
+
 import * as Sentry from '@sentry/node'
 import chalk from 'chalk'
-import * as os from 'os'
-import * as util from 'util'
 import createDebug from 'debug'
 import { createLogger, format, transports } from 'winston'
 
 import * as Config from './config'
+
+const util = require('util')
 
 // Support for Node v8.x
 util.formatWithOptions =
@@ -62,7 +64,7 @@ const hostname = os.hostname()
 const pid = process.pid
 
 function SPrint(info) {
-	if (Config.bool('Logger.ShortFormat')) {
+	if (Config.bool('Logger.ShortFormat', !Config.isProduction)) {
 		return `${colorLevel(info.level)}: ${info.message}`
 	}
 
@@ -160,6 +162,10 @@ export const logger = {
 	 */
 	SPrintf,
 
+	isDebugEnabled(namespace) {
+		return createDebug.enabled(namespace)
+	},
+
 	/**
 	 * Prints an info log to the logger if debugging is enabled for the namespace.
 	 * @param {String} namespace a debug-package friendly namespace
@@ -167,8 +173,20 @@ export const logger = {
 	 * @param  {...any} args arguments to interpolate into the message
 	 */
 	debug(namespace, msg, ...args) {
-		if (createDebug.enabled(namespace)) {
-			internalLogger.info(util.formatWithOptions(formatOpts, msg, ...args))
+		if (logger.isDebugEnabled(namespace)) {
+			let startTime = Date.now()
+			if (lastDebugTime.has(namespace)) {
+				startTime = lastDebugTime.get(namespace)
+			}
+			lastDebugTime.set(namespace, Date.now())
+
+			process.stderr.write(
+				logger.SPrintf(
+					`debug(${namespace})`,
+					msg + ' ' + chalk.yellow('+' + (Date.now() - startTime) + 'ms'),
+					...args,
+				) + '\n',
+			)
 		}
 	},
 

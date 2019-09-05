@@ -62,6 +62,10 @@ const hostname = os.hostname()
 const pid = process.pid
 
 function SPrint(info) {
+	if (Config.bool('Logger.ShortFormat')) {
+		return `${colorLevel(info.level)}: ${info.message}`
+	}
+
 	let log = ''
 
 	if (Config.isTestEnv) {
@@ -73,7 +77,7 @@ function SPrint(info) {
 
 	return `${log}${printDate(new Date())} [${pid}] ${colorLevel(info.level)}: ${
 		info.message
-	}`
+		}`
 }
 
 function SPrintf(level, msg, ...args) {
@@ -85,7 +89,7 @@ function SPrintf(level, msg, ...args) {
 
 const internalLogger = createLogger({
 	format: format.printf(SPrint),
-	level: Config.string('LoggingLevel', 'warn'),
+	level: Config.string('Logger.Level', 'info'),
 	transports: [new transports.Console()],
 })
 

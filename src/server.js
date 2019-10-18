@@ -108,7 +108,7 @@ export function createServer({ routes }) {
 		router.set(`${method} ${pathname}`, run)
 	}
 
-	const server = http.createServer(async function (req, res) {
+	const server = http.createServer(async function(req, res) {
 		const { pathname } = parseURL(req.url)
 		const handler = router.get(`${req.method} ${pathname}`)
 		if (handler) {
@@ -151,7 +151,7 @@ export function route(method, pathname, fn, opts = {}) {
 					req.session = await getSession(req)
 				}
 
-				req.params = function () {
+				req.params = function() {
 					if (global.URL) {
 						return new URL(req.url, Config.Server.PublicURL)
 					}

@@ -7,7 +7,7 @@
 		"access": "public"
 	},
 	"scripts": {
-		"test": "wiz test -- --runInBand",
+		"test": "wiz test -- --runInBand --forceExit --detectOpenHandles",
 		"lint": "wiz lint",
 		"build": "wiz build src/boa.js",
 		"watch": "wiz build -w src/boa.js"

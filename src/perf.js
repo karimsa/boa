@@ -16,22 +16,24 @@ function mstime(ms) {
 	return prettyTime([seconds, nanoseconds])
 }
 
-// Start either the blocked or blocked-at module, depending on
-// the environment to measure any latency caused by highly synchronous
-// code blocks
-if (Config.isProduction) {
-	require('blocked')(
-		delay => logger.warn(`Event loop blocked for ${mstime(delay)}`),
-		{ threshold: Config.int('Perf.MaxEventLoopBlock', 100) },
-	)
-} else {
-	require('blocked-at')(
-		(delay, stack) =>
-			logger.warn(
-				`Event loop blocked for ${mstime(delay)} at: ${stack.join('\n')}`,
-			),
-		{ threshold: Config.int('Perf.MaxEventLoopBlock', 100) },
-	)
+if (Config.bool('EnableBlocked', false)) {
+	// Start either the blocked or blocked-at module, depending on
+	// the environment to measure any latency caused by highly synchronous
+	// code blocks
+	if (Config.isProduction) {
+		require('blocked')(
+			delay => logger.warn(`Event loop blocked for ${mstime(delay)}`),
+			{ threshold: Config.int('Perf.MaxEventLoopBlock', 100) },
+		)
+	} else {
+		require('blocked-at')(
+			(delay, stack) =>
+				logger.warn(
+					`Event loop blocked for ${mstime(delay)} at: ${stack.join('\n')}`,
+				),
+			{ threshold: Config.int('Perf.MaxEventLoopBlock', 100) },
+		)
+	}
 }
 
 /**

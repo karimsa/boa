@@ -108,7 +108,7 @@ export function createServer({ routes }) {
 		router.set(`${method} ${pathname}`, run)
 	}
 
-	const server = http.createServer(async function(req, res) {
+	const server = http.createServer(async function (req, res) {
 		const { pathname } = parseURL(req.url)
 		const handler = router.get(`${req.method} ${pathname}`)
 		if (handler) {
@@ -151,7 +151,7 @@ export function route(method, pathname, fn, opts = {}) {
 					req.session = await getSession(req)
 				}
 
-				req.params = function() {
+				req.params = function () {
 					if (global.URL) {
 						return new URL(req.url, Config.Server.PublicURL)
 					}
@@ -173,7 +173,7 @@ export function route(method, pathname, fn, opts = {}) {
 				req.finished = false
 				const timeout = setTimeout(() => {
 					req.finished = true
-					res.status(503)
+					res.statusCode = 503
 					res.set('Content-Type', 'application/json')
 					res.end('{"error":"Request timed out"}')
 				}, Config.int('Server.Timeout', 10000))

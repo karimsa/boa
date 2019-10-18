@@ -1,6 +1,6 @@
 {
 	"name": "@karimsa/boa",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"description": "Toolkit for building backends in Node.js.",
 	"main": "boa.dist.js",
 	"publishConfig": {

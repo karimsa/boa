@@ -30,7 +30,8 @@ function getEnvName(name) {
 	let castedName = ''
 	for (let i = 0; i < name.length; i++) {
 		if (name[i] === '.') {
-			castedName += '_'
+			// Ignore dot, next letter should be uppercase and therefore
+			// add an underscore anyways
 		} else if (i !== 0 && name[i] === name[i].toUpperCase()) {
 			castedName += '_' + name[i]
 		} else {
@@ -46,11 +47,7 @@ export const NodeEnv = getValue('NODE_ENV') || 'development'
 export const isTestEnv = NodeEnv === 'test'
 export const isDevelopment = NodeEnv === 'development'
 export const isProduction = NodeEnv === 'production'
-export const EnvTarget = isProduction
-	? assertString('ENV_TARGET')
-	: getValue('ENV_TARGET') || 'development'
-export const isLocalEnv =
-	getValue('NODE_ENV') !== 'production' || EnvTarget === 'local'
+export const isLocalEnv = getValue('NODE_ENV') !== 'production'
 
 /**
  * Reads a environment variable from the env as a string.

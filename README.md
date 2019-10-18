@@ -21,7 +21,7 @@ Preloaded variables:
 
 ![](.github/logger.png)
 
-The exported logger is a wrapper around a hidden winston logger, which by default logs to the console. The logging levels can be configured using the environment variable `LOGGING_LEVEL` - the default is to log `warn` and above. The levels are as follows:
+The exported logger is a wrapper around a hidden winston logger, which by default logs to the console. The logging levels can be configured using the environment variable `LOGGER_LEVEL` - the default is to log `warn` and above. The levels are as follows:
 
 - `error`
 - `warn`

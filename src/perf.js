@@ -3,8 +3,9 @@
  * @copyright 2019-present Karim Alibhai. All rights reserved.
  */
 
-import prettyTime from 'pretty-time'
 import * as os from 'os'
+
+import prettyTime from 'pretty-time'
 
 import * as Config from './config'
 import { logger } from './logger'

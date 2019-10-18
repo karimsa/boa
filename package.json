@@ -2,33 +2,18 @@
 	"name": "@karimsa/boa",
 	"version": "0.0.4",
 	"description": "Toolkit for building backends in Node.js.",
+	"main": "boa.dist.js",
 	"publishConfig": {
 		"access": "public"
 	},
-	"bin": {
-		"boa": "./cli.sh"
-	},
 	"scripts": {
-		"test": "ava -v",
-		"lint": "eslint src/**/*.js",
-		"build": "babel src -d dist",
-		"watch": "npm run build -- -w",
-		"pretest": "npm run lint"
+		"test": "wiz test -- --runInBand",
+		"lint": "wiz lint",
+		"build": "wiz build src/boa.js",
+		"watch": "wiz build -w src/boa.js"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.4.4",
-		"@babel/core": "^7.4.5",
-		"@babel/preset-env": "^7.4.5",
-		"ava": "^2.1.0",
-		"eslint": "^6.0.0",
-		"eslint-config-prettier": "^5.0.0",
-		"eslint-config-standard": "^12.0.0",
-		"eslint-plugin-import": "^2.18.0",
-		"eslint-plugin-node": "^9.1.0",
-		"eslint-plugin-prettier": "^3.1.0",
-		"eslint-plugin-promise": "^4.1.1",
-		"eslint-plugin-standard": "^4.0.0",
-		"prettier": "^1.18.2",
+		"@karimsa/wiz": "^0.5.1",
 		"supertest": "^4.0.2"
 	},
 	"dependencies": {
@@ -42,6 +27,5 @@
 		"pretty-time": "git+https://github.com/karimsa/pretty-time.git",
 		"uuid": "^3.3.2",
 		"winston": "^3.2.1"
-	},
-	"main": "dist/index.js"
+	}
 }

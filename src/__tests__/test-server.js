@@ -3,12 +3,11 @@
  * @copyright 2019-present Karim Alibhai. All rights reserved.
  */
 
-import test from 'ava'
 import supertest from 'supertest'
 
-import { http } from '../'
+import * as http from '../server'
 
-test('should be able to create http servers', async t => {
+test('should be able to create http servers', async () => {
 	const app = supertest(
 		http.createServer({
 			routes: [
@@ -37,22 +36,22 @@ test('should be able to create http servers', async t => {
 		}),
 	)
 
-	t.is((await app.get('/')).status, 404)
+	expect((await app.get('/')).status).toBe(404)
 
 	// unprotected
 	const testRes = await app.get('/test')
-	t.is(testRes.status, 200)
-	t.deepEqual(testRes.body, {
+	expect(testRes.status).toBe(200)
+	expect(testRes.body).toEqual({
 		blah: 'shizblah',
 	})
 
 	// protected
 	const protectedBody = await app.get('/protected')
-	t.is(protectedBody.status, 401)
-	t.regex(protectedBody.body.error.message, /not authenticated/)
+	expect(protectedBody.status).toBe(401)
+	expect(protectedBody.body.error.message).toMatch(/not authenticated/)
 
 	// internal error
 	const internalErr = await app.get('/internal-error')
-	t.is(internalErr.status, 500)
-	t.regex(internalErr.body.error.message, /blahshizblah/)
+	expect(internalErr.status).toBe(500)
+	expect(internalErr.body.error.message).toMatch(/blahshizblah/)
 })

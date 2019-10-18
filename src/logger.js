@@ -79,7 +79,7 @@ function SPrint(info) {
 
 	return `${log}${printDate(new Date())} [${pid}] ${colorLevel(info.level)}: ${
 		info.message
-		}`
+	}`
 }
 
 function SPrintf(level, msg, ...args) {

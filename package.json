@@ -13,7 +13,7 @@
 		"watch": "wiz build -w src/boa.js"
 	},
 	"devDependencies": {
-		"@karimsa/wiz": "^0.5.1",
+		"@karimsa/wiz": "^0.8.0",
 		"supertest": "^4.0.2"
 	},
 	"dependencies": {
